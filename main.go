@@ -50,7 +50,6 @@ func Download(h hdrs, url string) { //{{{
 		DownloadSinglepart(url)
 		return
 	}
-	fmt.Println("multipart")
 	//download multipart
 	DownloadMultipart(h, url)
 } //}}}
@@ -94,7 +93,6 @@ func DownloadMultipart(h hdrs, url string) { //{{{
 			lower_bound = 0
 		}
 		part_str := fmt.Sprintf("%d-%d", lower_bound, ln)
-		fmt.Println("downloading", part_str, "part:", part)
 		wg.Add(1)
 		thread_limiter<-true
 		go download_part(url, part_str, part)
@@ -103,7 +101,6 @@ func DownloadMultipart(h hdrs, url string) { //{{{
 	}
 	wg.Wait()
 	glue_parts(GetFilename(url), part)
-	fmt.Println("finished")
 } //}}}
 func download_part(url, rng string, part int) { //{{{
 	defer wg.Done()
@@ -124,7 +121,6 @@ func download_part(url, rng string, part int) { //{{{
 	}
 	defer res.Body.Close()
 	io.Copy(file, res.Body)
-	fmt.Println("finished", rng, "part:", part)
 } //}}}
 func glue_parts(fname string, last_part int) { //{{{
 	file, err := os.Create(fname)
@@ -135,7 +131,6 @@ func glue_parts(fname string, last_part int) { //{{{
 	var partname string
 	for last_part >= 0 {
 		partname = fmt.Sprintf("%d.%s.part", last_part, fname)
-		fmt.Println("gluing", partname)
 		f, _ := os.Open(partname)
 		io.Copy(file, f)
 		f.Close()
