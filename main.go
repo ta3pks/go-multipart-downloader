@@ -13,18 +13,19 @@ import (
 
 	"github.com/spf13/pflag"
 )
-
 var file = pflag.StringP("url", "u", "", "url to download")
 var outname = pflag.StringP("outfile", "o", "", "output filename")
+var threads = pflag.IntP("threads", "t", 7, "number of threads to use at once")
 
-const CHUNK_SIZE = 10000
+const CHUNK_SIZE = 1000000
 
 type hdrs = map[string][]string
 
 var wg sync.WaitGroup
-
+	var thread_limiter chan bool
 func main() {
 	pflag.Parse()
+	thread_limiter = make(chan bool,*threads)
 	if *file == "" {
 		log.Fatalln("no file")
 	}
@@ -95,6 +96,7 @@ func DownloadMultipart(h hdrs, url string) { //{{{
 		part_str := fmt.Sprintf("%d-%d", lower_bound, ln)
 		fmt.Println("downloading", part_str, "part:", part)
 		wg.Add(1)
+		thread_limiter<-true
 		go download_part(url, part_str, part)
 		ln = ln - CHUNK_SIZE - 1
 		part++
@@ -105,6 +107,7 @@ func DownloadMultipart(h hdrs, url string) { //{{{
 } //}}}
 func download_part(url, rng string, part int) { //{{{
 	defer wg.Done()
+	defer func(){<-thread_limiter}()
 	file, err := os.Create(fmt.Sprintf("%d.%s.part", part, GetFilename(url)))
 	if nil != err {
 		log.Fatalln(err)
