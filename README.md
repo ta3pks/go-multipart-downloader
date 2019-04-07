@@ -1,12 +1,12 @@
 # go-multipart-downloader
 A multipart downloader for teaching purposes
 
-#USAGE
+## USAGE
 
 ```go
 go run main.go -u <url>
 ```
-#SUPPORTED FLAGS
+## SUPPORTED FLAGS
 
 `-u,--url` url to download from
 
