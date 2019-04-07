@@ -137,8 +137,9 @@ func glue_parts(fname string, last_part int) { //{{{
 		partname = fmt.Sprintf("%d.%s.part", last_part, fname)
 		fmt.Println("gluing", partname)
 		f, _ := os.Open(partname)
-		defer f.Close()
 		io.Copy(file, f)
+		f.Close()
+		os.Remove(partname)
 		last_part--
 	}
 } //}}}
