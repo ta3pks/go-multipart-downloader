@@ -13,3 +13,8 @@ go run main.go -u <url>
 `-o,--outfile` output filename
 
 If output filename does not exits the program will try to determine the name from the URL
+
+# TODO
+
+- [ ] progress bar
+- [ ] stats
