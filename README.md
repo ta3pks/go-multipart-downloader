@@ -5,6 +5,8 @@ A multipart downloader for teaching purposes
 
 ```go
 go run main.go -u <url>
+go run main.go -p -u <url>
+go run main.go --progress=true -u <url>
 ```
 ## SUPPORTED FLAGS
 
@@ -16,9 +18,11 @@ go run main.go -u <url>
 
 `-h` help message
 
-If output filename does not exits the program will try to determine the name from the URL
+`-p`its progress bar(its default)
 
+If output filename does not exits the program will try to determine the name from the URL
+If you won't work with progressbar you can use "go run main.go --progress=false -u <url>" this command without progressbar
 # TODO
 
-- [ ] progress bar
+- [x] progress bar
 - [ ] stats
